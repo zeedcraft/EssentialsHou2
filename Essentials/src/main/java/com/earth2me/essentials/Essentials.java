@@ -41,6 +41,8 @@ import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.updatecheck.UpdateChecker;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.VersionUtil;
+import com.github.puregero.essentials.sync.MultiServerSynchronizer;
+import com.github.puregero.multilib.MultiLib;
 import io.papermc.lib.PaperLib;
 import net.ess3.api.Economy;
 import net.ess3.api.IEssentials;
@@ -257,6 +259,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             i18n = new I18n(this);
             i18n.onEnable();
             execTimer.mark("I18n1");
+            MultiServerSynchronizer.init(this);
 
             Console.setInstance(this);
 
@@ -1236,7 +1239,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
     @Override
     public Collection<Player> getOnlinePlayers() {
-        return (Collection<Player>) getServer().getOnlinePlayers();
+        return (Collection<Player>) MultiLib.getAllOnlinePlayers();
     }
 
     @Override
