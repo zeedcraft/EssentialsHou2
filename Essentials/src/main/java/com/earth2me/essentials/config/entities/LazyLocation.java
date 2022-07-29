@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Represents a Location but doesn't parse the location until it is requested via {@link LazyLocation#location()}.
  */
-public class LazyLocation {
+public class LazyLocation implements Serializable { // MultiPaper - make serializable
     private String world;
     private String worldName;
     private final double x;
