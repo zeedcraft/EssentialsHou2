@@ -11,6 +11,8 @@ import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.NumberUtil;
 import com.earth2me.essentials.utils.TriState;
 import com.earth2me.essentials.utils.VersionUtil;
+import com.github.puregero.essentials.sync.*;
+import com.github.puregero.multilib.MultiLib;
 import com.google.common.collect.Lists;
 import net.ess3.api.IEssentials;
 import net.ess3.api.MaxMoneyException;
@@ -53,6 +55,13 @@ import static com.earth2me.essentials.I18n.tl;
 
 public class User extends UserData implements Comparable<User>, IMessageRecipient, net.ess3.api.IUser {
     private static final Statistic PLAY_ONE_TICK = EnumUtil.getStatistic("PLAY_ONE_MINUTE", "PLAY_ONE_TICK");
+    public static RequestTeleportSynchronizer requestTeleportSynchronizer;
+    public static RemoveTpaRequestSynchronizer removeTpaRequestSynchronizer;
+    public static LastLocationSynchronizer lastLocationSynchronizer;
+    public static LogoutLocationSynchronizer logoutLocationSynchronizer;
+    public static LogoutTimeSynchronizer logoutTimeSynchronizer;
+    public static LoginTimeSynchronizer loginTimeSynchronizer;
+    public static HomeLocationSynchronizer homeLocationSynchronizer;
 
     // User modules
     private final IMessageRecipient messageRecipient;
@@ -346,6 +355,8 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     @Override
     public void requestTeleport(final User player, final boolean here) {
+        requestTeleportSynchronizer.notify(this, player, here);
+
         final TpaRequest request = teleportRequestQueue.getOrDefault(player.getName(), new TpaRequest(player.getName(), player.getUUID()));
         request.setTime(System.currentTimeMillis());
         request.setHere(here);
@@ -400,6 +411,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     }
 
     public TpaRequest removeTpaRequest(String playerUsername) {
+        removeTpaRequestSynchronizer.notify(this, playerUsername);
         return teleportRequestQueue.remove(playerUsername);
     }
 
@@ -820,6 +832,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
         final long autoafkkick = ess.getSettings().getAutoAfkKick();
         if (autoafkkick > 0
+                && MultiLib.isLocalPlayer(this.getBase())
                 && lastActivity > 0 && (lastActivity + (autoafkkick * 1000)) < System.currentTimeMillis()
                 && !isAuthorized("essentials.kick.exempt")
                 && !isAuthorized("essentials.afk.kickexempt")) {
