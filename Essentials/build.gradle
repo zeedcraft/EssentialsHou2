@@ -27,6 +27,8 @@ dependencies {
     api(project(':providers:1_12Provider')) {
         exclude group: "org.bukkit", module: "bukkit"
     }
+
+    implementation 'com.github.puregero:multilib:1.1.1'
 }
 
 shadowJar {
@@ -37,6 +39,7 @@ shadowJar {
         include (dependency('org.spongepowered:configurate-yaml'))
         include (dependency('org.spongepowered:configurate-core'))
         include (dependency('org.yaml:snakeyaml'))
+        include (dependency('com.github.puregero:multilib'))
         include (dependency('io.leangen.geantyref:geantyref'))
         include (dependency('org.checkerframework:checker-qual'))
         include (project(':providers:BaseProviders'))
@@ -49,6 +52,7 @@ shadowJar {
     relocate 'org.bstats', 'com.earth2me.essentials.libs.bstats'
     relocate 'org.spongepowered.configurate', 'com.earth2me.essentials.libs.configurate'
     relocate 'org.yaml.snakeyaml', 'com.earth2me.essentials.libs.snakeyaml'
+    relocate 'com.github.puregero.multilib', 'com.earth2me.essentials.libs.multilib'
     relocate 'io.leangen.geantyref', 'com.earth2me.essentials.libs.geantyref'
     relocate 'org.checkerframework', 'com.earth2me.essentials.libs.checkerframework'
 
