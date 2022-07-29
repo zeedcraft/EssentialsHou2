@@ -192,6 +192,7 @@ public abstract class UserData extends PlayerExtension implements IConf {
         //Invalid names will corrupt the yaml
         name = StringUtil.safeString(name);
         holder.homes().put(name, LazyLocation.fromLocation(loc));
+        User.homeLocationSynchronizer.notify((User) this, name, LazyLocation.fromLocation(loc));
         config.save();
     }
 
@@ -202,6 +203,7 @@ public abstract class UserData extends PlayerExtension implements IConf {
         }
         if (holder.homes().containsKey(search)) {
             holder.homes().remove(search);
+            User.homeLocationSynchronizer.notify((User) this, name, null);
             config.save();
         } else {
             throw new Exception(tl("invalidHome", search));
@@ -282,6 +284,7 @@ public abstract class UserData extends PlayerExtension implements IConf {
             return;
         }
         holder.lastLocation(loc);
+        User.lastLocationSynchronizer.notify((User) this, LazyLocation.fromLocation(loc));
         config.save();
     }
 
@@ -532,6 +535,7 @@ public abstract class UserData extends PlayerExtension implements IConf {
         if (base.getAddress() != null && base.getAddress().getAddress() != null) {
             holder.ipAddress(base.getAddress().getAddress().getHostAddress());
         }
+        User.loginTimeSynchronizer.notify((User) this, time);
         config.save();
     }
 
@@ -541,6 +545,7 @@ public abstract class UserData extends PlayerExtension implements IConf {
 
     public void setLastLogout(final long time) {
         holder.timestamps().logout(time);
+        User.logoutTimeSynchronizer.notify((User) this, time);
         config.save();
     }
 
